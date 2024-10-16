@@ -1,0 +1,13 @@
+[flake8]
+exclude =
+    */migrations/*
+    .git,
+    .gitignore,
+    *.pot,
+    *.py[co],
+    __pycache__,
+    .env
+    __init__.py: F401
+max-complexity = 10
+max-line-length = 120
+ignore = E501,I101, C901, ANN201, ANN101, ANN002, ANN003, I100, A003, I201, ANN401, A005, F401, ANN001, I202, F841, W503, ANN102
