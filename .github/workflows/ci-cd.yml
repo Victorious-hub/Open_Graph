@@ -26,7 +26,7 @@ jobs:
 
       - name: Install django server
         run: |
-          make docker-dev
+          make docker-build
 
       - name: Lint with ruff
         run: |
