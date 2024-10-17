@@ -62,7 +62,7 @@ class UserCreateApi(APIView):
         POST: Create a new user.
     """
 
-    class InputSerializer(serializers.ModelSerializer):
+    class UserCreateSerializer(serializers.ModelSerializer):
         email = serializers.EmailField()
         password = serializers.CharField()
 
@@ -71,7 +71,7 @@ class UserCreateApi(APIView):
             fields = ["email", "password"]
 
     @extend_schema(
-        request=InputSerializer,
+        request=UserCreateSerializer,
         responses={
             201: None,
             400: OpenApiResponse(description="Bad request. Invalid credentials"),
@@ -80,7 +80,7 @@ class UserCreateApi(APIView):
         description="Create a new user",
     )
     def post(self, request):
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.UserCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user_create(**serializer.validated_data)
         return Response(status=status.HTTP_201_CREATED)

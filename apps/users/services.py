@@ -3,7 +3,7 @@ import uuid
 from apps.users.models import PasswordReset, UserAccount
 from django.contrib.auth.hashers import make_password
 
-from core.exceptions import NotFoundError, PasswordNotMatchError, ResetLinkExpriredError
+from core.exceptions import NotFoundError, PasswordNotMatchError, ResetLinkExpriredError, UserExistsError
 
 
 def user_create(*, email: str, password: str) -> UserAccount:
@@ -15,6 +15,8 @@ def user_create(*, email: str, password: str) -> UserAccount:
     Returns:
         UserAccount: The newly created user account.
     """
+    if UserAccount.objects.filter(email=email).exists():
+        raise UserExistsError
 
     user = UserAccount.objects.create(email=email, password=make_password(password))
     user.save()

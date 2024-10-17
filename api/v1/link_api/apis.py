@@ -25,11 +25,11 @@ class LinkCreateApi(views.APIView):
 
     permission_classes = [IsAuthenticated]
 
-    class LinkInputSerializer(serializers.Serializer):
+    class LinkCreateSerializer(serializers.Serializer):
         link = serializers.URLField()
 
     @extend_schema(
-        request=LinkInputSerializer,
+        request=LinkCreateSerializer,
         responses={
             201: None,
             401: OpenApiResponse(description="User is not authenticated"),
@@ -38,7 +38,7 @@ class LinkCreateApi(views.APIView):
         description="Create a new link",
     )
     def post(self, request):
-        serializer = self.LinkInputSerializer(data=request.data)
+        serializer = self.LinkCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         link_create(user=request.user, **serializer.validated_data)
         return Response(status=status.HTTP_201_CREATED)
@@ -60,7 +60,7 @@ class LinkListApi(views.APIView):
     class Pagination(LimitOffsetPagination):
         default_limit = 10
 
-    class LinkListOutputSerializer(serializers.ModelSerializer):
+    class LinkListSerializer(serializers.ModelSerializer):
         user = inline_serializer(
             fields={
                 "id": serializers.IntegerField(),
@@ -74,9 +74,9 @@ class LinkListApi(views.APIView):
             fields = "__all__"
 
     @extend_schema(
-        request=LinkListOutputSerializer,
+        request=LinkListSerializer,
         responses={
-            200: LinkListOutputSerializer,
+            200: LinkListSerializer,
             401: OpenApiResponse(description="User is not authenticated"),
         },
         tags=["links"],
@@ -108,7 +108,7 @@ class LinkGetApi(views.APIView):
 
     permission_classes = [IsAuthenticated]
 
-    class LinkOutputSerializer(serializers.ModelSerializer):
+    class LinkGetSerializer(serializers.ModelSerializer):
         user = inline_serializer(
             fields={
                 "id": serializers.IntegerField(),
@@ -122,9 +122,9 @@ class LinkGetApi(views.APIView):
             fields = "__all__"
 
     @extend_schema(
-        request=LinkOutputSerializer,
+        request=LinkGetSerializer,
         responses={
-            200: LinkOutputSerializer,
+            200: LinkGetSerializer,
             401: OpenApiResponse(description="User is not authenticated"),
             404: OpenApiResponse(description="User is not found"),
         },
@@ -132,7 +132,7 @@ class LinkGetApi(views.APIView):
         description="Retrieve a specific link",
     )
     def get(self, request, link_id: int):
-        data = self.LinkOutputSerializer(
+        data = self.LinkGetSerializer(
             link_get(user_id=request.user.pk, link_id=link_id)
         ).data
         return Response(data, status=status.HTTP_200_OK)

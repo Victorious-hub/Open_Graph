@@ -278,7 +278,6 @@ class LinkCollectionListApi(views.APIView):
                 "link_type": serializers.CharField(),
             }
         )
-
         class Meta:
             model = LinkCollection
             fields = "__all__"

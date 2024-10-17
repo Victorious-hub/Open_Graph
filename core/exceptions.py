@@ -29,3 +29,8 @@ class LinkExistsError(APIException):
     status_code = 400
     default_detail = "Link already exists for the user"
     default_code = "bad_request"
+
+class UserExistsError(APIException):
+    status_code = 400
+    default_detail = "User already exists"
+    default_code = "bad_request"
